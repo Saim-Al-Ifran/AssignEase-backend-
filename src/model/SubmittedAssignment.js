@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 const submittedAssignmentSchema = new mongoose.Schema({
     assignment: {
       type: mongoose.Schema.Types.ObjectId,
