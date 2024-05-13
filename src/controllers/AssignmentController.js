@@ -84,9 +84,34 @@ const updateAssignment = async (req, res, next) => {
   };
 
 
+const deleteAssignment = async (req, res) => {
+    try {
+      const assignmentId = req.params.id;
+      const userId = req.user.id;  
+      const assignment = await Assignment.findById(assignmentId);
+  
+      if (!assignment) {
+        return res.status(404).json({ success: false, error: 'Assignment not found' });
+      }
+ 
+      if (assignment.createdBy.toString() !== userId) {
+        return res.status(403).json({ success: false, error: 'You are not authorized to delete this assignment' });
+      }
+  
+    
+      await Assignment.findByIdAndDelete(assignmentId);
+  
+      res.json({ success: true, message: 'Assignment deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  }; 
+
+
 module.exports = {
     createAssignment,
     updateAssignment,
     getAllAssignments,
-    getAssignmentById
+    getAssignmentById,
+    deleteAssignment
 }

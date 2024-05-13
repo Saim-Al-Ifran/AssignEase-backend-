@@ -2,7 +2,8 @@ const {
      getAllAssignments,
      getAssignmentById,
      createAssignment,
-     updateAssignment
+     updateAssignment,
+     deleteAssignment
  } = require('../controllers/AssignmentController');
 
 const router = require('express').Router();
@@ -12,5 +13,6 @@ router.get('/',getAllAssignments);
 router.get('/:id',getAssignmentById);
 router.post('/add',authenticate,createAssignment);
 router.put('/edit/:id',authenticate,updateAssignment);
+router.delete('/:id',deleteAssignment)
 
 module.exports = router;
