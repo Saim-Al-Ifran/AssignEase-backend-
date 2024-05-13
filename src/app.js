@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const userRoute = require('./routes/userRoute');
 const assignmentRoute = require('./routes/assignmentRoute');
+const submittedAssignmentRoute = require('./routes/submittedAssignment');
 const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
@@ -13,6 +14,7 @@ app.use(helmet());
 
 app.use('/api/v1/AssignmentEase',userRoute);
 app.use('/api/v1/AssignmentEase/assignment',assignmentRoute);
+app.use('/api/v1/AssignmentEase/assignment_submission',submittedAssignmentRoute);
 
 
 

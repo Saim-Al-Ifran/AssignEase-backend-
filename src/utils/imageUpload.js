@@ -15,7 +15,7 @@ const uploadImageToCloudinary = async (file) => {
             const dataURI = 'data:' + file.mimetype + ';base64,' + b64;
 
             return await cloudinary.uploader.upload(dataURI, {
-                folder: 'event_management/uploads',
+                folder: 'AssignmentEase/uploads',
                 public_id: publicIdWithoutExtension,
             });
 };
