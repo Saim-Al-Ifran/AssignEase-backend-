@@ -3,12 +3,14 @@ const app = express();
 const cors = require('cors');
 const helmet = require('helmet');
 const userRoute = require('./routes/userRoute');
+const assignmentRoute = require('./routes/assignmentRoute');
 
 app.use(express.json());
 app.use(cors());
 app.use(helmet());
 
 app.use('/api/v1/AssignmentEase',userRoute);
+app.use('/api/v1/AssignmentEase/assignment',assignmentRoute);
 
 
 
