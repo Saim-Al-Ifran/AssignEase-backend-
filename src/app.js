@@ -4,7 +4,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const userRoute = require('./routes/userRoute');
 const assignmentRoute = require('./routes/assignmentRoute');
+const cookieParser = require('cookie-parser');
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors());
 app.use(helmet());

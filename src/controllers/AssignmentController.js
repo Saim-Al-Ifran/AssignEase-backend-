@@ -32,7 +32,9 @@ const getAssignmentById = async (req, res) => {
   };
 
 const createAssignment = async(req,res,next)=>{
+    
     try {
+        const userId = req.user.id;
         const {
           title,
           description,
@@ -51,7 +53,7 @@ const createAssignment = async(req,res,next)=>{
           thumbnailUrl,
           difficultyLevel,
           dueDate,
-          createdBy
+          createdBy:userId
         });
     
         
@@ -91,11 +93,11 @@ const deleteAssignment = async (req, res) => {
       const assignment = await Assignment.findById(assignmentId);
   
       if (!assignment) {
-        return res.status(404).json({ success: false, error: 'Assignment not found' });
+        return res.status(404).json({ success: false, message: 'Assignment not found' });
       }
  
       if (assignment.createdBy.toString() !== userId) {
-        return res.status(403).json({ success: false, error: 'You are not authorized to delete this assignment' });
+        return res.status(403).json({ success: false, message: 'You are not authorized to delete this assignment' });
       }
   
     

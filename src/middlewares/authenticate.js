@@ -32,8 +32,8 @@ const authenticate = async(req,_res,next)=>{
       if (err.name === 'SyntaxError') {
          return next(new CustomError('Invalid token',401));
       }
-   
-      next(new CustomError('Authentication server problem',500));
+     // console.log(err.message);
+      next(new CustomError(err.message,500));
 
      }
 }

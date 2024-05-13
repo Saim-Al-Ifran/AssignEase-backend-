@@ -9,10 +9,10 @@ const {
 const router = require('express').Router();
 const{authenticate} = require('../middlewares/authenticate');
 
-router.get('/',getAllAssignments);
-router.get('/:id',getAssignmentById);
-router.post('/add',authenticate,createAssignment);
-router.put('/edit/:id',authenticate,updateAssignment);
-router.delete('/:id',deleteAssignment)
+router.get('/', getAllAssignments);
+router.post('/',authenticate, createAssignment);
+router.get('/:id', getAssignmentById);
+router.put('/:id',authenticate, updateAssignment);
+router.delete('/:id',authenticate ,deleteAssignment);
 
 module.exports = router;
