@@ -52,20 +52,80 @@ const  submitAssignment = async (req, res) => {
     }
 };
  
-const getCreatedAssignmentsByUser = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const createdAssignments = await Assignment.find({ createdBy: userId });
+  const getCreatedAssignmentsByUser = async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const createdAssignments = await Assignment.find({ createdBy: userId });
 
-    res.json({ success: true, data: createdAssignments });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
+      res.json({ success: true, data: createdAssignments });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  };
+
+
+  const getAssignmentSubmissions = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Fetch assignments created by the user
+        const assignments = await Assignment.find({ createdBy: userId });
+
+        if (assignments.length === 0) {
+            return res.status(404).json({ message: 'No assignments found for this user' });
+        }
+
+        // Extract assignment IDs from the fetched assignments
+        const assignmentIds = assignments.map(a => a._id);
+        
+        // Fetch submitted assignments related to the fetched assignments
+        const submittedAssignments = await SubmittedAssignment.find({ assignment: { $in: assignmentIds } });
+
+        if (submittedAssignments.length === 0) {
+            return res.status(404).json({ message: 'No submitted assignments found!!' });
+        }
+
+        return res.status(200).json({ message: 'Success', submissions: submittedAssignments });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+}
+  const  assignMarks = async (req, res) => {
+        try {
+          const { assignmentId, submissionId, marks, feedback } = req.body;
+
+          // Find the submitted assignment by ID
+          const submittedAssignment = await SubmittedAssignment.findById(submissionId);
+
+          if (!submittedAssignment) {
+            return res.status(404).json({ success: false, error: 'Submitted assignment not found' });
+          }
+          // Check if the assignment associated with the submitted assignment was created by the logged-in user
+          const assignment = await Assignment.findById(assignmentId);
+          if (!assignment || assignment.createdBy.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, error: 'You are not authorized to assign marks to this submission' });
+          }
+
+         
+          submittedAssignment.marks = marks;
+          submittedAssignment.feedback = feedback;
+          submittedAssignment.status = 'completed';
+          await submittedAssignment.save();
+
+          res.json({ success: true, message: 'Marks assigned successfully' });
+        } catch (error) {
+          res.status(500).json({ success: false, error: error.message });
+        }
+  };
+
 
 
   module.exports = {
     submitAssignment,
     getSubmittedAssignmentsByUser,
-    getCreatedAssignmentsByUser
+    getCreatedAssignmentsByUser,
+    getAssignmentSubmissions,
+    assignMarks
   }
