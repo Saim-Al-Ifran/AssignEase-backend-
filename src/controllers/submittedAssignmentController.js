@@ -68,17 +68,17 @@ const  submitAssignment = async (req, res) => {
     try {
         const userId = req.user._id;
 
-        // Fetch assignments created by the user
+         
         const assignments = await Assignment.find({ createdBy: userId });
 
         if (assignments.length === 0) {
             return res.status(404).json({ message: 'No assignments found for this user' });
         }
 
-        // Extract assignment IDs from the fetched assignments
+      
         const assignmentIds = assignments.map(a => a._id);
         
-        // Fetch submitted assignments related to the fetched assignments
+        
         const submittedAssignments = await SubmittedAssignment.find({ assignment: { $in: assignmentIds } });
 
         if (submittedAssignments.length === 0) {
@@ -96,13 +96,11 @@ const  submitAssignment = async (req, res) => {
         try {
           const { assignmentId, submissionId, marks, feedback } = req.body;
 
-          // Find the submitted assignment by ID
           const submittedAssignment = await SubmittedAssignment.findById(submissionId);
 
           if (!submittedAssignment) {
             return res.status(404).json({ success: false, error: 'Submitted assignment not found' });
           }
-          // Check if the assignment associated with the submitted assignment was created by the logged-in user
           const assignment = await Assignment.findById(assignmentId);
           if (!assignment || assignment.createdBy.toString() !== req.user._id.toString()) {
             return res.status(403).json({ success: false, error: 'You are not authorized to assign marks to this submission' });
