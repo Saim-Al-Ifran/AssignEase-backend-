@@ -64,7 +64,14 @@ const loginController = async(req,res,next)=>{
                 return next(new CustomError('Failed to generate token'));
            }
    
-           return res.status(202).json({message:'Login Successfull',token});
+           return res.status(202).json({
+            user:{
+              name:user.name,
+              email:user.email
+            },
+            message:'Login Successfull',
+            token
+          });
 
     } catch (err) {
           next(new CustomError(err.message,500));
