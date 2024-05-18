@@ -5,7 +5,9 @@ const User = require('../model/User');
 
 const authenticate = async(req,_res,next)=>{
     try{
-        let token = req.cookies.jwt; 
+       const authHeader = req.headers.authorization;
+     
+       let token = req.cookies.jwt || (authHeader && authHeader.split(' ')[1]);
         
         if(!token){
               return next(new CustomError('unauthorized',403));
