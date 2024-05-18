@@ -34,7 +34,7 @@ const getAssignmentById = async (req, res) => {
 const createAssignment = async(req,res,next)=>{
     
     try {
-        const userId = req.user.id;
+        
         const {
           title,
           description,
