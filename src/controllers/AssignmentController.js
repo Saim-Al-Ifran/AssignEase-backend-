@@ -53,7 +53,7 @@ const createAssignment = async(req,res,next)=>{
           thumbnailUrl,
           difficultyLevel,
           dueDate,
-          createdBy:createdBy || userId 
+          createdBy
         });
     
         
