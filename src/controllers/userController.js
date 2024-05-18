@@ -68,7 +68,8 @@ const loginController = async(req,res,next)=>{
            return res.status(202).json({
             user:{
               name:user.name,
-              email:user.email
+              email:user.email,
+              avatar:user.avatar
             },
             message:'Login Successfull',
             token
