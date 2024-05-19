@@ -44,6 +44,7 @@ const createAssignment = async(req,res,next)=>{
           dueDate,
           createdBy
         } = req.body;
+        console.log(req.body);
     
          
         const assignment = new Assignment({
@@ -61,7 +62,7 @@ const createAssignment = async(req,res,next)=>{
     
         res.status(201).json({ success: true, data: assignment });
       } catch (err) {
-           return next(CustomError(err.message,500))
+           return next(new CustomError(err.message,500))
       }
 }
 
@@ -81,7 +82,7 @@ const updateAssignment = async (req, res, next) => {
       res.status(200).json({ success: true, data: assignment });
 
     } catch (error) {
-        return next(CustomError(err.message,500));
+        return next(new CustomError(err.message,500));
     }
   };
 
@@ -89,21 +90,21 @@ const updateAssignment = async (req, res, next) => {
 const deleteAssignment = async (req, res) => {
     try {
       const assignmentId = req.params.id;
-      const userId = req.user.id;  
+      // const userId = req.user.id;  
       const assignment = await Assignment.findById(assignmentId);
   
       if (!assignment) {
         return res.status(404).json({ success: false, message: 'Assignment not found' });
       }
  
-      if (assignment.createdBy.toString() !== userId) {
-        return res.status(403).json({ success: false, message: 'You are not authorized to delete this assignment' });
-      }
+      // if (assignment.createdBy.toString() !== userId) {
+      //   return res.status(403).json({ success: false, message: 'You are not authorized to delete this assignment' });
+      // }
   
     
       await Assignment.findByIdAndDelete(assignmentId);
   
-      res.json({ success: true, message: 'Assignment deleted successfully' });
+      res.status(200).json({ success: true, message: 'Assignment deleted successfully' });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
     }
