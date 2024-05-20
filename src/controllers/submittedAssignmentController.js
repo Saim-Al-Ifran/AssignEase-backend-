@@ -6,9 +6,9 @@ const Assignment = require('../model/Assignment');
 const  submitAssignment = async (req, res) => {
    
     try {
-      const { assignment, user, note } = req.body;
+      const { assignment, email, note } = req.body;
       const file = req.file; 
-
+       
       if (!file) {
         return res.status(400).json({ success: false, error: 'No file uploaded' });
       }
@@ -17,7 +17,7 @@ const  submitAssignment = async (req, res) => {
   
       const submittedAssignment = new SubmittedAssignment({
         assignment,
-        user,
+        email,
         pdfDocLink: cloudinaryResponse.secure_url,
         note
       });
@@ -31,18 +31,19 @@ const  submitAssignment = async (req, res) => {
   };
 
 
- const getSubmittedAssignmentsByUser = async (req, res) => {
+  const getSubmittedAssignmentsByUser = async (req, res) => {
     try {
-        const userId = req.user._id;
-        const { status } = req.query;
-        let query = { user: userId };
+        const { status, email } = req.query;
+ 
+        let query = { email: email };
 
         if (status) {
             query.status = status;
         }
- 
-        const submittedAssignments = await SubmittedAssignment.find(query);
-        if(submittedAssignments.length === 0){
+        const submittedAssignments = await SubmittedAssignment.find(query)
+                                                              .populate('assignment');
+
+        if (submittedAssignments.length === 0) {
             return res.status(404).json({ message: 'No submitted assignments found' });
         }
 
@@ -74,11 +75,8 @@ const  submitAssignment = async (req, res) => {
         if (assignments.length === 0) {
             return res.status(404).json({ message: 'No assignments found for this user' });
         }
-
       
-        const assignmentIds = assignments.map(a => a._id);
-        
-        
+        const assignmentIds = assignments.map(a => a._id);       
         const submittedAssignments = await SubmittedAssignment.find({ assignment: { $in: assignmentIds } });
 
         if (submittedAssignments.length === 0) {
