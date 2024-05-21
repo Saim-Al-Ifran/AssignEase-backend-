@@ -5,7 +5,8 @@ const {
     getSubmittedAssignmentsByUser,
     getCreatedAssignmentsByUser,
     getAssignmentSubmissions,
-    assignMarks
+    assignMarks,
+    getAssignmentSubmission
  } = require('../controllers/submittedAssignmentController');
 
 const { authenticate } = require('../middlewares/authenticate');
@@ -15,7 +16,8 @@ router.post('/',upload.single('pdfDoc'),submitAssignment);
 router.get('/submitted_assignment',getSubmittedAssignmentsByUser);
 router.get('/myCreatedAssignments',getCreatedAssignmentsByUser)
 router.get('/assignment_submissions',getAssignmentSubmissions);
-router.post('/assign_marks',assignMarks)
+router.get('/assignment_submissions/:id',getAssignmentSubmission);
+router.post('/assign_marks/:id',assignMarks)
  
 
 module.exports = router;

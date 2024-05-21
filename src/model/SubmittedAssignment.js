@@ -27,6 +27,10 @@ const submittedAssignmentSchema = new mongoose.Schema({
     },
     feedback: {
       type: String
+    },
+    author:{
+      type:String,
+      required:true
     }
   });
   
