@@ -3,14 +3,14 @@ const Assignment= require('../model/Assignment');
 const CustomError = require("../error/CustomError");
 
 
-const getAllAssignments = async (req, res) => {
+const getAllAssignments = async (req, res, next) => {
     try {
       // Retrieve all assignments from the database
       const assignments = await Assignment.find();
   
       res.json({ success: true, data: assignments });
     } catch (err) {
-       return next(CustomError(err.message,500))
+       return next(new CustomError(err.message,500))
     }
   };
 
@@ -76,7 +76,7 @@ const updateAssignment = async (req, res, next) => {
       const assignment = await Assignment.findByIdAndUpdate(assignmentId, updateData, { new: true });
   
       if (!assignment) {
-        return next(CustomError('Assignment not found',404)) ;
+        return next(new CustomError('Assignment not found',404)) ;
       }
   
       res.status(200).json({ success: true, data: assignment });
@@ -100,7 +100,6 @@ const deleteAssignment = async (req, res) => {
       // if (assignment.createdBy.toString() !== userId) {
       //   return res.status(403).json({ success: false, message: 'You are not authorized to delete this assignment' });
       // }
-  
     
       await Assignment.findByIdAndDelete(assignmentId);
   
